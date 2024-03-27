@@ -4,8 +4,135 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PPT压缩</title>
-  <link rel="stylesheet" href="style.css">
- 
+  <style>
+    /* 重置样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .file-select {
+      margin-bottom: 20px;
+      padding: 20px;
+      border: 1px dashed #ddd;
+      border-radius: 5px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .file-select input {
+      display: none;
+    }
+
+    .file-select label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .file-select .iconfont {
+      font-size: 24px;
+      margin-right: 10px;
+      color: #007bff;
+    }
+
+    .compress-area {
+      display: none;
+    }
+
+    .progress-bar {
+      margin-top: 20px;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-inner {
+      height: 100%;
+      background-color: #007bff;
+      width: 0%;
+    }
+
+    .result-area {
+      margin-top: 20px;
+    }
+
+    .compressed-files {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .compressed-files li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px dashed #ddd;
+    }
+
+    .compressed-files .file-name {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .compressed-files .file-size {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .compressed-files a {
+      font-size: 14px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    /* 媒体查询 */
+    @media screen and (max-width: 576px) {
+      .container {
+        max-width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -14,8 +141,8 @@
       <p>选择要压缩的PPT文件，然后点击“压缩”按钮即可开始压缩。</p>
     </div>
     <div class="file-select">
-      <input type="file" id="file-input" multiple accept=".pptx">
-      <label for="file-input">
+      <input type="file" id="file-input" accept=".pptx">
+            <label for="file-input">
         <span class="iconfont">&#xe608;</span>
         选择要压缩的PPT文件
       </label>
@@ -32,15 +159,89 @@
             <span class="file-size">100 KB</span>
             <a href="#">下载</a>
           </li>
-          <li>
-            <span class="file-name">文件名2.pptx</span>
-            <span class="file-size">200 KB</span>
-            <a href="#">下载</a>
-          </li>
         </ul>
       </div>
     </div>
   </div>
-  <script src="script.js"></script>
+
+  <script>
+    const fileInput = document.getElementById('file-input');
+    const progressBar = document.querySelector('.progress-bar .progress-inner');
+    const resultArea = document.querySelector('.result-area');
+    const compressedFiles = document.querySelector('.compressed-files');
+
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+
+      // 显示压缩区域
+      compressArea.style.display = 'block';
+
+      // 创建一个新的压缩任务
+      const task = new CompressTask(file);
+
+      // 监听压缩任务的进度
+      task.onprogress = (progress) => {
+        // 更新进度条
+        progressBar.style.width = `${progress}%`;
+      };
+
+      // 监听压缩任务的完成
+      task.oncomplete = (compressedFile) => {
+        // 添加压缩后的文件到列表中
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="file-name">${compressedFile.name}</span>
+          <span class="file-size">${compressedFile.size}</span>
+          <a href="${compressedFile.url}" download>下载</a>
+        `;
+        compressedFiles.appendChild(li);
+
+        // 隐藏进度条
+        progressBar.style.width = '0%';
+
+        // 显示结果区域
+        resultArea.style.display = 'block';
+      };
+
+      // 开始压缩任务
+      task.start();
+    });
+
+    // 压缩任务类
+    class CompressTask {
+      constructor(file) {
+        this.file = file;
+        this.progress = 0;
+        this.onprogress = () => {};
+        this.oncomplete = () => {};
+      }
+
+      start() {
+        // 模拟压缩过程
+        setTimeout(() => {
+          // 压缩完成
+          const compressedFile = {
+            name: this.file.name,
+            size: 100, // 压缩后文件大小
+            url: 'https://www.example.com/download.zip', // 压缩后文件的下载链接
+          };
+
+          // 调用完成回调函数
+          this.oncomplete(compressedFile);
+        }, 1000);
+
+        // 模拟压缩进度
+        const interval = setInterval(() => {
+          this.progress += 10;
+          this.onprogress(this.progress);
+
+          if (this.progress === 100) {
+            clearInterval(interval);
+          }
+        }, 100);
+      }
+    }
+  </script>
 </body>
 </html>
+
