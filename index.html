@@ -4,129 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PPT压缩</title>
-  <style>
-    /* 重置样式 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .upload-area {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #file-input {
-      display: none;
-    }
-
-    #compress-button {
-      margin-left: 10px;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .progress-bar {
-      margin-top: 20px;
-      height: 20px;
-      background-color: #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-inner {
-      height: 100%;
-      background-color: #007bff;
-      width: 0%;
-    }
-
-    .result-area {
-      margin-top: 20px;
-      display: none;
-    }
-
-    #compressed-size {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    #download-link {
-      margin-top: 10px;
-      display: block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 16px;
-    }
-
-    /* 媒体查询 */
-    @media screen and (max-width: 576px) {
-      .container {
-        max-width: 100%;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
+ 
 </head>
 <body>
   <div class="container">
-    <h1>PPT压缩</h1>
-    <p>选择要压缩的PPT文件，然后点击“压缩”按钮即可开始压缩。</p>
-    <div class="upload-area">
-      <input type="file" id="file-input" accept=".pptx">
-      <label for="file-input">选择文件</label>
-      <button id="compress-button">压缩</button>
+    <div class="header">
+      <h1>PPT压缩</h1>
+      <p>选择要压缩的PPT文件，然后点击“压缩”按钮即可开始压缩。</p>
     </div>
-    <div class="progress-bar">
-      <div class="progress-inner"></div>
+    <div class="file-select">
+      <input type="file" id="file-input" multiple accept=".pptx">
+      <label for="file-input">
+        <span class="iconfont">&#xe608;</span>
+        选择要压缩的PPT文件
+      </label>
     </div>
-    <div class="result-area">
-      <p>压缩成功！</p>
-      <p>压缩后文件大小：<span id="compressed-size"></span></p>
-      <a id="download-link" href="#">下载压缩文件</a>
+    <div class="compress-area">
+      <div class="progress-bar">
+        <div class="progress-inner"></div>
+      </div>
+      <div class="result-area">
+        <p>压缩成功！</p>
+        <ul class="compressed-files">
+          <li>
+            <span class="file-name">文件名.pptx</span>
+            <span class="file-size">100 KB</span>
+            <a href="#">下载</a>
+          </li>
+          <li>
+            <span class="file-name">文件名2.pptx</span>
+            <span class="file-size">200 KB</span>
+            <a href="#">下载</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-  <script>
-    const fileInput = document.getElementById('file-input');
-    const compressButton = document.getElementById('compress-button');
-    const progressBar = document.querySelector('.progress-bar .progress-inner');
-    const resultArea = document.querySelector('.result-area');
-    const compressedSize = document.getElementById('compressed-size');
-    const downloadLink = document.getElementById('download-link');
-
-    compressButton.addEventListener('click', () => {
-      // 获取用户选择的文件
-      const file = fileInput.files[0];
-
-      // 显示
+  <script src="script.js"></script>
+</body>
+</html>
